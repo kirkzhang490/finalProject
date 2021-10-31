@@ -32,7 +32,12 @@
       </form>
       <br>
       {% if result %}
-        {{result}}
+        name: {{result.user}}, url: {{result.url}}
+        <div id="feedbackDiv">
+            <h2>Interested in this link?</h2>
+            <button onclick="userFeedBack()">Yes</button>
+            <button onclick="notUse()">No</button>
+        </div>
       {% endif %}
       {% for error in errors %}
         <h4>{{ error }}</h4>
@@ -40,5 +45,17 @@
     </div>
     <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script>
+        const user = '{{ result.user }}';
+        async function userFeedBack() {
+            feedbackDiv  = document.getElementById("feedbackDiv");
+            feedbackDiv.style.display = "none";
+            const response = await fetch('/feedback?user='+user);
+        }
+        function notUse() {
+            feedbackDiv  = document.getElementById("feedbackDiv");
+            feedbackDiv.style.display = "none";
+        }
+    </script>
   </body>
 </html>

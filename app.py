@@ -34,7 +34,7 @@ def update_user():
 @app.route('/', methods=['GET','POST'])
 def root():
     errors = []
-    result = ''
+    result = {}
     allUsers = []
     try:
         tb = module.Users()
@@ -45,7 +45,10 @@ def root():
         try:
             url = request.form['url']
             user = request.form['user']
-            result = user + ': ' + url
+            result = {
+                'user': user,
+                'url': url
+            }
         except:
             errors.append(
                 "Unable to get URL. Please make sure it's valid and try again."
@@ -69,6 +72,13 @@ def userPage():
                 "Unable add user name may duplicated."
             )
     return render_template('user.html',categories=categories, result=result, errors=errors)
+
+@app.route('/feedback', methods=['GET'])
+def feedback():
+    userName = request.args.get('user')
+    tb = module.Users()
+    tb.insertFeedBack(userName, 'new feedback')
+    return "ok"
 
 if __name__ == '__main__':
     app.run()

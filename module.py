@@ -62,6 +62,18 @@ class Users(base):
         except:
             return 'not able to update this time'
         return 'success updated'
+    
+    def insertFeedBack(self,name, feedback):
+        record =  session.query(Users).filter(Users.name==name).first()
+        if record is None:
+            return 'user not exist'
+        try:
+            newFeedback = ','.join([record.feedback,feedback])
+            session.query(Users).filter(Users.name == name).update({'feedback': newFeedback})
+            session.commit()
+        except:
+            return 'not able to insert feedback this time'
+        return 'success insert'
 
 # # Delete
 # stmt = delete(Users).where(Users.name == 'Doctor Strange')
@@ -77,10 +89,6 @@ class Users(base):
 # stmt = update(Users).where(Users.name == 'kirk Strange').values(name = "Some2016Film")
 # result = session.execute(stmt)
 # session.commit()
-
-users_ = session.query(Users)  
-for user in users_:  
-    print(user.name)
 
 # Users.__table__.drop(db)
 # base.metadata.create_all(db)    
