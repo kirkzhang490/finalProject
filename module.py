@@ -36,6 +36,10 @@ class Users(base):
         result =  session.query(Users).filter(Users.name==name).one()
         return 'Created name: ' + result.name + ' categories: ' + result.categories + ' feedback: ' + result.feedback + 'id: ' + str(result.id)
     
+    def getByName(self, name):
+        result =  session.query(Users).filter(Users.name==name).one()
+        return result
+
     def dropTable(self):
         session.query(Users).delete()
         session.commit()
@@ -96,6 +100,10 @@ class Category(base):
     def queryByName(self, name):
         result =  session.query(Category).filter(Category.name==name).one()
         return 'Created name: ' + result.name + ' keyword: ' + result.keyword
+
+    def getKeyWordByName(self, name):
+        result = session.query(Category).filter(Category.name==name).one()
+        return result.keyword
 
     def allCategories(self):
         categories = session.query(Category)

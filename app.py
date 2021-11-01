@@ -36,10 +36,12 @@ def root():
     errors = []
     result = {}
     allUsers = []
+    keyWords = []
+    tb = None
+    tb_=None
     try:
         tb = module.Users()
         tb_ = module.Category()
-        allCategories = tb_.allCategories()
         allUsers = tb.allUsers()
     except:
         errors.append('not able to fetch user db')
@@ -51,6 +53,15 @@ def root():
                 'user': user,
                 'url': url
             }
+            selectedUser = tb.getByName(user)
+            feedback_ = str(selectedUser.feedback)
+            keyWords = feedback_    .split(',')
+            currentCategories = str(selectedUser.categories)
+            currentCategories = currentCategories.split(',')
+            for c in currentCategories:
+                k = tb_.getKeyWordByName(c)
+                keyWords.append(k)
+            print(keyWords)
         except:
             errors.append(
                 "Unable to get URL. Please make sure it's valid and try again."
@@ -73,7 +84,6 @@ def userPage():
             userName = request.form.get('userName')
             tb = module.Users()
             result = tb.create(userName,categoriesForUser,'')
-            print(result)
         except:
             errors.append(
                 "Unable add user name may duplicated."
