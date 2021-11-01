@@ -75,6 +75,61 @@ class Users(base):
             return 'not able to insert feedback this time'
         return 'success insert'
 
+class Category(base):  
+    __tablename__ = 'category'
+    id =  Column(Integer, primary_key=True)
+    name = Column(String, unique=True)
+    keyword = Column(String)
+
+    def create(self, name, keyword):
+        result =  session.query(Category).filter(Category.name==name).first()
+        if result is not None:
+            return 'duplicated Category try again'
+        try:
+            stmt = Category(name=name, keyword=keyword)  
+            session.add(stmt)
+            session.commit()
+        except:
+            return 'not able to create this time'
+        return self.queryByName(name)
+
+    def queryByName(self, name):
+        result =  session.query(Category).filter(Category.name==name).one()
+        return 'Created name: ' + result.name + ' keyword: ' + result.keyword
+
+    def allCategories(self):
+        categories = session.query(Category)
+        result = []
+        for category in categories:  
+            result.append({
+                'name': category.name,
+                'categories': category.keyword
+            })
+        print(result)
+        return result
+
+    def updateCategory(self,name, keyword):
+        check =  session.query(Category).filter(Category.name==name).first()
+        if check is None:
+            return 'Category not exist'
+        try:
+            session.query(Category).filter(Category.name == name).update({"keyword": keyword})
+            session.commit()
+        except:
+            return 'not able to update this time'
+        return 'success updated'
+
+    def deleteCategory(self,name):
+        check =  session.query(Category).filter(Category.name==name).first()
+        if check is None:
+            return 'Category not exist'
+        try:
+            session.query(Category).filter(Category.name == name).delete()
+            session.commit()
+        except:
+            return 'not able to delete this time'
+        return 'success deleted'
+
 # # Delete
 # stmt = delete(Users).where(Users.name == 'Doctor Strange')
 # result = session.execute(stmt)
@@ -91,4 +146,4 @@ class Users(base):
 # session.commit()
 
 # Users.__table__.drop(db)
-# base.metadata.create_all(db)    
+base.metadata.create_all(db)    
